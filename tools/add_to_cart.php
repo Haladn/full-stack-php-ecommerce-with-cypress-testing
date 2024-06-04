@@ -14,6 +14,12 @@ function redirect($connect){
 
 if($_SERVER['REQUEST_METHOD'] =='POST'){
     if(isset($_POST['add_to_cart'])){
+
+        // identify product quantity
+        //check if the post is from view page to get product quantity
+        if(isset($_POST['view_product_quantity'])){
+            $quantity = $_POST['view_product_quantity'];
+        }else{$quantity = 1;}
         
         $product_id = mysqli_real_escape_string($connect,$_POST['product_id']);
 
@@ -21,11 +27,6 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
         $request = mysqli_query($connect,$query);
         if(mysqli_num_rows($request)==1){
             $product = mysqli_fetch_array($request,MYSQLI_ASSOC);
-
-            // identify product quantity
-            
-
-            
 
             //checking if customer is registered and take action accordingly
             if(isset($_SESSION['username'])){
@@ -48,7 +49,7 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
 
                         // when cart_item available then update its quantity
                         $cart_item = mysqli_fetch_array($cart_item_request,MYSQLI_ASSOC);
-                        $new_quantity = $cart_item['quantity'] + 1;
+                        $new_quantity = $cart_item['quantity'] + $quantity;
 
                         // update quantity in the database
                         $q="UPDATE cart_items SET quantity = '$new_quantity' WHERE cart_id = '$cart_id' AND product_id='$product_id';";
@@ -62,7 +63,7 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                         
                     }else{
                         // create a new cart_item
-                        $q = "INSERT INTO cart_items(cart_id,product_id,quantity) VALUES ('$cart_id','$product[id]',1);";
+                        $q = "INSERT INTO cart_items(cart_id,product_id,quantity) VALUES ('$cart_id','$product[id]','$quantity');";
                         $r = mysqli_query($connect,$q);
                         if($r){
                             // add message
@@ -91,7 +92,7 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
 
                             // when cart_item available then update its quantity
                             $cart_item = mysqli_fetch_array($cart_item_request,MYSQLI_ASSOC);
-                            $new_quantity = $cart_item['quantity']++;
+                            $new_quantity = $cart_item['quantity'] + $quantity;
 
                             // update quantity in the database
                             $q="UPDATE cart_items SET quantity = '$new_quantity' WHERE cart_id = '$cart_id';";
@@ -100,7 +101,7 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                             $_SESSION['cart_message'] = 'Added to the cart';
                         }else{
                             // create a new cart_item
-                            $q = "INSERT INTO cart_items(cart_id,product_id,quantity) VALUES ('$cart_id','$product[id]',1);";
+                            $q = "INSERT INTO cart_items(cart_id,product_id,quantity) VALUES ('$cart_id','$product[id]','$quantity');";
                             $r = mysqli_query($connect,$q);
                             if($r){
                                 // add message
@@ -119,44 +120,38 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
 
                 }
                redirect($connect);
-            }else{}
-            // if customer not registered then add item to the session 
-            // else{
-            //     // check for cart session
-            //     if(!isset($_SESSION['cart'])){
-            //         $_SESSION['cart']=[];
-            //     }
+            }
+            //customer not registered then add item to the session 
+            else{
+                // check for cart session
+                if(!isset($_SESSION['cart'])){
+                    $_SESSION['cart']=[];
+                }
 
-            //     //add item to cart session if not added
-            //     if(!isset($_SESSION['cart'][$product['id']])){
-            //         $_SESSION['cart'][$product['id']] =[
-            //             'title'=>$product['title'],
-            //             'price'=>$product['price'],
-            //             'quantity'=>1
-            //         ];
+                //add item to cart session if not added
+                if(!isset($_SESSION['cart'][$product['id']])){
+                    $_SESSION['cart'][$product['id']] =[
+                        'title'=>$product['title'],
+                        'price'=>$product['price'],
+                        'quantity'=>$quantity,
+                    ];
                     
-            //         // add message
-            //         $_SESSION['cart_message'] = 'Added to the cart';
-            //     }
-            //     // increment the quantity if alredy added
-            //     else{
-            //     $_SESSION['cart'][$product['id']]['quantity']++;
+                    // add message
+                    $_SESSION['cart_message'] = 'Added to the cart';
+                }
+                // increment the quantity if alredy added
+                else{
+                $_SESSION['cart'][$product['id']]['quantity'] += $quantity;
 
-            //     // add message
-            //     $_SESSION['cart_message'] = 'Added to the cart';
+                // add message
+                $_SESSION['cart_message'] = 'Added to the cart';
                 
-            //     }
+                }
 
-            //     //redirect to the page
-
-            //     // header("Location: ../home.php");
-            //     // mysqli_close($connect);
-            //     // exit;
-
-
-
-                
-            // }
+                //redirect to the page
+                 redirect($connect);
+ 
+            }
            
 
 

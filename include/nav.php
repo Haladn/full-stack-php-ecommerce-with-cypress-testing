@@ -2,15 +2,36 @@
 
   session_start();
  include __DIR__.'/../config.php';
+ require(__DIR__.'/../database/db_connect.php');
 
  $current_page = basename($_SERVER['REQUEST_URI']);
 
-//  if(isset($_SESSION['login_time'])){
-//   if(time() - $_SESSION['login_time'] > 600){
-//     session_unset();
-//     session_destroy();
-//   }
-//  }
+ // loging out user after his session ends
+ if(isset($_SESSION['login_time'])){
+  if(time() - $_SESSION['login_time'] > 1200){
+    session_unset();
+    session_destroy();
+  }
+ }
+
+  // handling number of items in the cart
+  $total_quantity = 0;
+  if(isset($_SESSION['customer_id'])){
+    $customer_id=$_SESSION['customer_id'];
+    $q = "SELECT total_quantity FROM  view_customer_total_items WHERE customer_id ='$customer_id'; ";
+    $r = mysqli_query($connect,$q);
+    if($r){
+      $result = mysqli_fetch_assoc($r);
+      $total_quantity = $result['total_quantity'];
+    }
+  }else{
+    if(isset($_SESSION['cart'])){
+      foreach($_SESSION['cart'] as $item){
+        $total_quantity += $item['quantity'];
+      }
+    }
+  }
+    
  
  
 ?>
@@ -71,7 +92,9 @@
                      
                         <ul class="navbar-nav ms-auto">
                           <li class="nav-item my-auto">
-                            <a href="<?= MAIN_DIRECTORY?>/user/cart.php" class="nav-link  <?=$current_page == 'cart.php'? 'active':'' ?>"><i class="fa-solid fa-lg fa-cart-shopping" style="color: #FFD43B;">0</i></a>
+                            <a href="<?= MAIN_DIRECTORY?>/user/cart.php" class="nav-link  <?=$current_page == 'cart.php'? 'active':'' ?>"><i class="fa-solid fa-lg fa-cart-shopping" style="color: #FFD43B;">
+                              <?=$total_quantity?>
+                            </i></a>
                           </li>
                           <li class="nav-item text-white">
                             <?php if(isset($_SESSION['username'])){
@@ -104,3 +127,26 @@
                 </div>
         </div>
     </div>
+    
+    
+    <?php
+      // display message after adding items to the cart
+      if(isset($_SESSION['cart_message'])){
+        ?>
+            <div class="container-fluid">
+              <div class="row justify-content-center">
+                <div class="col col-10 col-md-4  text-center">
+                  <div class="alert alert-warning alert-dismissible fade show mt-3 fw-bold" role="alert">
+                      <?=$_SESSION['cart_message']?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        <?php
+
+        unset($_SESSION['cart_message']);
+      }
+
+    ?>
