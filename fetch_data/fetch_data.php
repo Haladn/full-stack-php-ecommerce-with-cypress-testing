@@ -1,6 +1,6 @@
 <?php
 
-require('./db_connect.php');
+require('../fetch_data/fetch_data.php');
 
 
 $url='https://fakestoreapi.com/products';
@@ -19,9 +19,10 @@ foreach($data as $item){
     $description = mysqli_real_escape_string($connect,$item['description']);
     $category = mysqli_real_escape_string($connect,$item['category']);
     $image = mysqli_real_escape_string($connect,$item['image']);
+    $quantity = 10;
 
     // making qurey to the database
-    $query = "INSERT INTO products(title,price,description,image,category) VALUES('$title','$price','$description','$image','$category')";
+    $query = "INSERT INTO products(title,price,description,image,category,quantity) VALUES('$title','$price','$description','$image','$category','$quantity')";
     $request = mysqli_query($connect,$query);
     if($request){
         echo "item added successfully";
@@ -33,6 +34,7 @@ foreach($data as $item){
     echo $item['description'].'<br>';
     echo $item['category'].'<br>';
     echo $item['image'].'<br>';
+    echo $item['quantity'].'<br>';
     echo '<br>';
     echo "-------------------------------------------".'<br>';
 }

@@ -47,12 +47,13 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                     $cart_item_request = mysqli_query($connect,$cart_item_query);
                     if($cart_item_request && mysqli_num_rows($cart_item_request)==1){
 
-                        // when cart_item available then update its quantity
+                        // when cart_item available then update its quantity and total price
                         $cart_item = mysqli_fetch_array($cart_item_request,MYSQLI_ASSOC);
                         $new_quantity = $cart_item['quantity'] + $quantity;
+                        $total_price = $new_quantity * (float) $product['price'];
 
                         // update quantity in the database
-                        $q="UPDATE cart_items SET quantity = '$new_quantity' WHERE cart_id = '$cart_id' AND product_id='$product_id';";
+                        $q="UPDATE cart_items SET quantity = '$new_quantity',total_price = '$total_price' WHERE cart_id = '$cart_id' AND product_id='$product_id';";
                         $r = mysqli_query($connect,$q);
                         if($r){
                             // add message to the session
@@ -63,16 +64,18 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                         
                     }else{
                         // create a new cart_item
-                        $q = "INSERT INTO cart_items(cart_id,product_id,quantity) VALUES ('$cart_id','$product[id]','$quantity');";
-                        $r = mysqli_query($connect,$q);
-                        if($r){
-                            // add message
-                            $_SESSION['cart_message'] = 'Added to the cart';
-                        }else{
-                            echo mysqli_error($connect);
-                        
-                        }
+                        $total_price = $quantity * (float) $product['price'];
 
+                        $q = "INSERT INTO cart_items(cart_id,product_id,quantity, total_price) VALUES ('$cart_id','$product[id]','$quantity','$total_price');";
+                        $r = mysqli_query($connect,$q);
+                       
+                        // add message
+                        $_SESSION['cart_message'] = 'Added to the cart';
+
+                        if(!$r){
+                            echo "DATABASE connection failed.". mysqli_error($connect);
+                        }
+ 
                     }
 
 
@@ -82,45 +85,34 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                     $q = "INSERT INTO cart(customer_id) VALUES ('$customer_id');";
                     $r = mysqli_query($connect,$q);
                     if($r){
-                        // getting cart id to use it in cart_items
+                        
+                        // get cart id
                         $cart_id = mysqli_insert_id($connect);
-
-                        // check if cart_item available 
-                        $cart_item_query = "SELECT * FROM cart_items WHERE cart_id='$cart_id';";
-                        $cart_item_request = mysqli_query($connect,$cart_item_query);
-                        if(mysqli_num_rows($cart_item_request)==1){
-
-                            // when cart_item available then update its quantity
-                            $cart_item = mysqli_fetch_array($cart_item_request,MYSQLI_ASSOC);
-                            $new_quantity = $cart_item['quantity'] + $quantity;
-
-                            // update quantity in the database
-                            $q="UPDATE cart_items SET quantity = '$new_quantity' WHERE cart_id = '$cart_id';";
-
-                            // add message to the session
+                        echo 'cart_id: '.$cart_id;
+                        // create a new cart_item
+                        $total_price = $quantity * (float) $product['price'];
+                        $query = "INSERT INTO cart_items(cart_id,product_id,quantity,total_price) VALUES ('$cart_id','$product[id]','$quantity','$total_price');";
+                        echo 'insert inso cart items';
+                        $request = mysqli_query($connect,$query);
+                        if($request){
+                            // add message
                             $_SESSION['cart_message'] = 'Added to the cart';
                         }else{
-                            // create a new cart_item
-                            $q = "INSERT INTO cart_items(cart_id,product_id,quantity) VALUES ('$cart_id','$product[id]','$quantity');";
-                            $r = mysqli_query($connect,$q);
-                            if($r){
-                                // add message
-                                $_SESSION['cart_message'] = 'Added to the cart';
-                            }else{
-                                echo mysqli_error($connect);
-                            
-                            }
-
+                            echo "DATABASE connection failed.". mysqli_error($connect);
                         }
-                       
-                    }else{
-                        echo mysqli_error($connect);
+                        
+                    }   
+                    else{
+                        echo "DATABASE connection failed.". mysqli_error($connect);
                     }
                     
 
                 }
+                // redirect to the main page
                redirect($connect);
             }
+
+            
             //customer not registered then add item to the session 
             else{
                 // check for cart session
@@ -132,8 +124,10 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                 if(!isset($_SESSION['cart'][$product['id']])){
                     $_SESSION['cart'][$product['id']] =[
                         'title'=>$product['title'],
-                        'price'=>$product['price'],
-                        'quantity'=>$quantity,
+                        'price'=> $product['price'],
+                        'in_cart_quantity'=>$quantity,
+                        'in_stock_quantity' =>$product['quantity'],
+                        'image' => $product['image']
                     ];
                     
                     // add message
@@ -141,7 +135,7 @@ if($_SERVER['REQUEST_METHOD'] =='POST'){
                 }
                 // increment the quantity if alredy added
                 else{
-                $_SESSION['cart'][$product['id']]['quantity'] += $quantity;
+                $_SESSION['cart'][$product['id']]['in_cart_quantity'] += $quantity;
 
                 // add message
                 $_SESSION['cart_message'] = 'Added to the cart';

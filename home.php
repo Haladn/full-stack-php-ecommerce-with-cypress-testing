@@ -3,7 +3,7 @@
     include 'include/nav.php';
     require('database/db_connect.php');
 
-    // check for seach products
+    // check for search products
     if(isset($_POST['search_btn'])){
         $search = mysqli_real_escape_string($connect,trim($_POST['search']));
         $query = "SELECT * FROM products WHERE title LIKE '%$search%'";
@@ -16,7 +16,7 @@
                     <?php
                         foreach($products as $product){
                             ?>
-                                <div class="card my-5 mx-5" style="width: 16rem; height:18rem">
+                                <div class="card my-5 mx-5" style="width: 16rem;">
                                     <img src="<?=$product['image']?>" alt="Product Image" class="card-img-top img-fluid" style="height: 300px;">
                                     <div class="card-body bg-light">
                                     <div class="card-title h6" style="height: 90px;"><?=$product['title']?></div>

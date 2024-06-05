@@ -2,6 +2,15 @@
     include 'include/nav.php';
     require('database/db_connect.php');
 
+    $back_page='';
+    $referer_page = $_SERVER['HTTP_REFERER'];
+    if(str_contains($referer_page,"electronic.php") || str_contains($referer_page,"jewelery.php")
+        || str_contains($referer_page,"men_clothing.php") || str_contains($referer_page,"women_clothing.php") || str_contains($referer_page,"cart.php")){
+        $_SESSION['back_page'] = $referer_page;
+        $back_page = $_SESSION['back_page'] ;   
+    }
+
+
     $product_id = $_GET['id'];
     $query = "SELECT * FROM products WHERE id='$product_id'";
     $request = mysqli_query($connect,$query);
@@ -32,7 +41,7 @@
                                     ?>
                                 <div class="input-group  mt-3 justify-content-center">
                                     <div class="me-2">
-                                        <a href="<?=$_SERVER['HTTP_REFERER']?>" class="px-3 btn btn-danger">Back</a>
+                                        <a href="<?=isset($_SESSION['back_page'])?$_SESSION['back_page']:'home.php'?>" class="px-3 btn btn-danger">Back</a>
                                     </div>
                                     <div>
                                     <button  name="add_to_cart" type="submit" class=" btn btn-md btn-secondary">Add to cart</button>

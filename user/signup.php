@@ -3,7 +3,7 @@
     include '../include/nav.php';
     require('../database/db_connect.php');
 
-
+    // processing the sign up form data
     if($_SERVER['REQUEST_METHOD']=="POST"){
         if(isset($_POST['signup_btn'])){
             //initialize an error array
@@ -35,10 +35,47 @@
 
             // checking errors array
             if(empty($errors)){
-
-                $query = "INSERT INTO customers(userName,email,password,created_at) VALUES ('$username','$email','$password',NOW())";
+                // make querry
+                $query = "INSERT INTO customers(username,email,password,created_at) VALUES ('$username','$email','$password',NOW())";
                 $request = mysqli_query($connect,$query);
                 if($request){
+                    // get customer id
+                    $customer_id = mysqli_insert_id($connect);
+
+                    // check if there is any item in session cart
+                    if(isset($_SESSION['cart']) && !empty($_SESSION['cart'])){
+
+                        // create a customer cart
+                        $cart_query = "INSERT INTO cart(customer_id) VALUES('$customer_id');";
+                        $cart_requet = mysqli_query($connect,$cart_query);
+                        if($cart_requet){
+
+                            // get cart id
+                            $cart_id = mysqli_insert_id($connect);
+
+                            $session_cart = $_SESSION['cart'];
+                            //looping through every item in session cart and pusht it to the database
+                            foreach($session_cart as $product_id => $cart_item){
+
+                                // product_id = $product_id just to remember
+                                $quantity = $cart_item['in_cart_quantity'];
+                                $total_price = (float) $cart_item['price'] * $quantity;
+
+                                // creat a customer cart item
+                                $q = "INSERT INTO cart_items(cart_id,product_id,total_price,quantity) VALUES('$cart_id','$product_id','$total_price','$quantity');";
+                                $r = mysqli_query($connect,$q);
+                                if($r){
+                                    // destroy cart session
+                                    unset($_SESSION['cart']);
+                                }
+
+                            }
+
+                        }else{
+                            echo "Failed to connect to database".mysqli_error($connect);
+                        }
+
+                    }
                     $_SESSION['message']="YOU signed up successfully";
                     header("Location: ./login.php");
                     mysqli_close($connect);

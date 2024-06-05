@@ -17,7 +17,7 @@
         }
 
         if(empty($errors)){
-            $q ="SELECT id,userName FROM customers WHERE email='$e'AND password='$pwd'";
+            $q ="SELECT id,username FROM customers WHERE email='$e'AND password='$pwd'";
 
             $r = mysqli_query($link,$q);
             if(@mysqli_num_rows($r)==1){

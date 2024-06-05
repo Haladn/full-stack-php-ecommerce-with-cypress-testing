@@ -1,33 +1,37 @@
 <?php
 
   session_start();
+
  include __DIR__.'/../config.php';
  require(__DIR__.'/../database/db_connect.php');
 
  $current_page = basename($_SERVER['REQUEST_URI']);
 
  // loging out user after his session ends
- if(isset($_SESSION['login_time'])){
-  if(time() - $_SESSION['login_time'] > 1200){
-    session_unset();
-    session_destroy();
-  }
- }
+//  if(isset($_SESSION['login_time'])){
+//   if(time() - $_SESSION['login_time'] > 1200){
+//     session_unset();
+//     session_destroy();
+//   }
+//  }
 
   // handling number of items in the cart
   $total_quantity = 0;
+  $total_price = 0;
   if(isset($_SESSION['customer_id'])){
     $customer_id=$_SESSION['customer_id'];
-    $q = "SELECT total_quantity FROM  view_customer_total_items WHERE customer_id ='$customer_id'; ";
+    $q = "SELECT total_quantity, total_price FROM  view_customer_total_items WHERE customer_id ='$customer_id'; ";
     $r = mysqli_query($connect,$q);
-    if($r){
+    if($r && mysqli_num_rows($r) > 0){
       $result = mysqli_fetch_assoc($r);
       $total_quantity = $result['total_quantity'];
+      $total_price = $result['total_price'];
     }
   }else{
     if(isset($_SESSION['cart'])){
       foreach($_SESSION['cart'] as $item){
-        $total_quantity += $item['quantity'];
+        $total_quantity += $item['in_cart_quantity'];
+        $total_price += (float) $item['price'] * $item['in_cart_quantity'];
       }
     }
   }

@@ -24,7 +24,7 @@
             list ($check,$data) = validate($connect,$email=$_POST['email'],$password=$_POST['password']);
             if($check){
                 $_SESSION['customer_id'] = $data['id'];
-                $_SESSION['username'] = $data['userName'];
+                $_SESSION['username'] = $data['username'];
                 $_SESSION['login_time'] = time();
                 
                 header("Location: ../home.php");
