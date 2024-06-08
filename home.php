@@ -17,23 +17,23 @@
                         foreach($products as $product){
                             ?>
                                 <div class="card my-5 mx-5" style="width: 16rem;">
-                                    <img src="<?=$product['image']?>" alt="Product Image" class="card-img-top img-fluid" style="height: 300px;">
+                                    <img id="home-image-<?=$product['id']?>" src="<?=$product['image']?>" alt="Product Image" class="card-img-top img-fluid" style="height: 300px;">
                                     <div class="card-body bg-light">
-                                    <div class="card-title h6" style="height: 90px;"><?=$product['title']?></div>
-                                    <p class="mb-1 fw-bold text-<?=$product['quantity'] > 0? 'ordinary':'danger'?>"><?=$product['quantity'] > 0? 'in stock':'Out of stock'?></p>
-                                    <p class="card-text h6 pb-2">Price: £<?=$product['price']?></p>
+                                    <div id="home-title-<?=$product['id']?>" class="card-title h6" style="height: 90px;"><?=$product['title']?></div>
+                                    <p id="home-quantity-<?=$product['id']?>" class="mb-1 fw-bold text-<?=$product['quantity'] > 0? 'ordinary':'danger'?>"><?=$product['quantity'] > 0? 'in stock':'Out of stock'?></p>
+                                    <p id="home-price-<?=$product['id']?>" class="card-text h6 pb-2">Price: £<?=$product['price']?></p>
                                     <div class="input-group justify-content-center">
                                         <?php if($product['quantity'] >0){ ?>
                                         <div class="me-2">
                                         <form action="./tools/add_to_cart.php" method="POST">
-                                                <input name="product_id" type="text" value="<?=$product['id']?>" hidden>
-                                                <button name="add_to_cart" type="submit" class="btn btn-secondary">add to cart</button>
+                                                <input id="home-input-product-<?=$product['id']?>" name="product_id" type="text" value="<?=$product['id']?>" hidden>
+                                                <button id="home-input-button" name="add_to_cart" type="submit" class="btn btn-secondary home-btn">add to cart</button>
                                         </form>
                                         </div>
                                         <?php } ?>
 
                                         <div>
-                                        <a href="view.php?id=<?=$product['id'];?>" class=" btn btn-info px-4">view</a>
+                                        <a id="home-link-button" href="view.php?id=<?=$product['id'];?>" class=" btn btn-info px-4 view-btn">view</a>
                                         </div>
                                     </div>
                                     </div>
@@ -71,23 +71,23 @@
                         foreach($products as $product){
                             ?>
                                 <div class="card my-5 mx-5" style="width: 16rem;">
-                                    <img src="<?=$product['image']?>" alt="Product Image" class="card-img-top" style="height: 300px;">
+                                    <img id="home-image-<?=$product['id']?>" src="<?=$product['image']?>" alt="Product Image" class="card-img-top img-fluid" style="height: 300px;">
                                     <div class="card-body bg-light">
-                                    <div class="card-title h6" style="height: 90px;"><?=$product['title']?></div>
-                                    <p class="mb-1 fw-bold text-<?=$product['quantity'] > 0? 'ordinary':'danger'?>"><?=$product['quantity'] > 0? 'in stock':'Out of stock'?></p>
-                                    <p class="card-text h6 pb-2">Price: £<?=$product['price']?></p>
+                                    <div id="home-title-<?=$product['id']?>" class="card-title h6" style="height: 90px;"><?=$product['title']?></div>
+                                    <p id="home-quantity-<?=$product['id']?>" class="mb-1 fw-bold text-<?=$product['quantity'] > 0? 'ordinary':'danger'?>"><?=$product['quantity'] > 0? 'in stock':'Out of stock'?></p>
+                                    <p id="home-price-<?=$product['id']?>" class="card-text h6 pb-2">Price: £<?=$product['price']?></p>
                                     <div class="input-group justify-content-center">
                                         <?php if($product['quantity'] >0){ ?>
                                         <div class="me-2">
-                                            <form action="./tools/add_to_cart.php" method="POST">
-                                                <input name="product_id" type="text" value="<?=$product['id']?>" hidden>
-                                                <button name="add_to_cart" type="submit" class="btn btn-secondary">add to cart</button>
-                                            </form>
+                                        <form action="./tools/add_to_cart.php" method="POST">
+                                                <input id="home-input-product-<?=$product['id']?>" name="product_id" type="text" value="<?=$product['id']?>" hidden>
+                                                <button id="home-input-button" name="add_to_cart" type="submit" class="btn btn-secondary home-btn">add to cart</button>
+                                        </form>
                                         </div>
                                         <?php } ?>
 
                                         <div>
-                                        <a href="view.php?id=<?=$product['id'];?>" class=" btn btn-info px-4">view</a>
+                                        <a id="home-link-button" href="view.php?id=<?=$product['id'];?>" class=" btn btn-info px-4 view-btn">view</a>
                                         </div>
                                     </div>
                                     </div>

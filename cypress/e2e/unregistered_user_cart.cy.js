@@ -37,7 +37,7 @@ describe('checking cart items number with cart content', () => {
             in_cart_quantity:1,
             in_stock_quantity:10,
             image:'http://localhost/php_ecommerce/test_file/watch.jpg'
-          }
+          },
         },
         cart_message:'added to the cart'
       },

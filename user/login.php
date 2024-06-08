@@ -8,7 +8,7 @@
         ?>
             <div class="row justify-content-center mt-5">
                 <div class=" col-sm-6 col-10">
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <div id="success_message" class="alert alert-warning alert-dismissible fade show" role="alert">
                         <?='<p>'.$_SESSION['message'].'</p>'?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>

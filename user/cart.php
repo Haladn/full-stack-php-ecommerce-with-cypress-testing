@@ -15,13 +15,13 @@
             ?>
                 <div class="container-fluid text-center mt-5 ">
                     <div class="col col-10 col-md-4 bg-light mx-auto p-3 rounded border border-dark">
-                        <div class="h6">Total Products: <?=$total_quantity?></div>
-                        <div class="h6">Total Price: £<?=number_format($total_price,2)?></div>
+                        <div id="cart-total-quantity" class="h6">Total Products: <span><?=$total_quantity?></span></div>
+                        <div id="cart-total-price" class="h6">Total Price: £<span><?=number_format($total_price,2)?></span></div>
 
                         <form action="../tools/checkout.php" method="POST">
-                            <input name="total_quantity" type="text" value="<?=$total_quantity?>" hidden>
-                            <input name="total_price" type="text" value="<?=$total_price?>" hidden>
-                            <button type="submit" name="total_checkout_btn" class="btn btn-md btn-success mt-2">Checkout</button>
+                            <input id="cart-form-total-quantity" name="total_quantity" type="text" value="<?=$total_quantity?>" hidden>
+                            <input id="cart-form-total-price" name="total_price" type="text" value="<?=$total_price?>" hidden>
+                            <button id="cart-form-totalbutton" type="submit" name="total_checkout_btn" class="btn btn-md btn-success mt-2">Checkout</button>
                         </form>
                     </div>
                 </div>
@@ -34,24 +34,24 @@
                             <div class="card my-5 p-2 bg-light mx-auto " style="max-width:700px;"> 
                                 <div class="row g-3">  
 
-                                     <img class="img-fluid " style="max-height: 200px;max-width: 200px;"  src="<?=$product['image']?>" alt="<?=$product['title']?>">
+                                     <img  class="img-fluid cart-img" style="max-height: 200px;max-width: 200px;"  src="<?=$product['image']?>" alt="<?=$product['title']?>">
 
                                     <div class="col-md-8">
                                         <div class="d-flex flex-column justify-content-between align-items-stretch h-100">
-                                            <div class="card-title fw-bold"><?=$product['title']?></div>
+                                            <div class="cart-title card-title fw-bold"><?=$product['title']?></div>
                                             
                                             <div class="card-title fw-bold">
-                                                Price: £<?= number_format($product['price'] * $product['in_cart_quantity'], 2) ?>
+                                                Price: £<span class="cart-price"><?= number_format($product['price'] * $product['in_cart_quantity'], 2) ?></span>
                                             </div>
                                             <div>
                                                 <form action="../tools/update_quantity.php" method="POST">
-                                                    <input style="width:45px;" name="item_quantity" type="number" min="1" max="<?=$product['product_quantity']?>" value="<?=$product['in_cart_quantity']?>">
-                                                    <input name="item_id" type="text"  value="<?=$product['cart_item_id']?>" hidden>
-                                                    <input name="item_price" type="text" value="<?=$product['price']?>" hidden>
+                                                    <input class="cart-form-quantity" style="width:45px;" name="item_quantity" type="number" min="1" max="<?=$product['product_quantity']?>" value="<?=$product['in_cart_quantity']?>">
+                                                    <input class="cart-form-item-id" name="item_id" type="text"  value="<?=$product['cart_item_id']?>" hidden>
+                                                    <input class="cart-form-price" name="item_price" type="text" value="<?=$product['price']?>" hidden>
         
-                                                    <button type="submit" name="update_btn" class="btn btn-sm btn-warning mb-1">update</button>
-                                                    <button type="submit" name="delete_btn" class="btn btn-sm btn-danger mb-1">delete</button>
-                                                    <a class="btn btn-sm btn-info mb-1" href="../view.php?id=<?=$product['product_id']?>">view</a>
+                                                    <button  type="submit" name="update_btn" class="btn btn-sm btn-warning mb-1">update</button>
+                                                    <button  type="submit" name="delete_btn" class="btn btn-sm btn-danger mb-1">delete</button>
+                                                    <a name="cart-view-link" class="btn btn-sm btn-info mb-1" href="../view.php?id=<?=$product['product_id']?>">view</a>
                                                     
                                                 </form>
                                             </div>
