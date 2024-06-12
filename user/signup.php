@@ -142,7 +142,7 @@
             <input  name="email" type="email" class="form-control" id="signup_email" value="<?=isset($_POST['email'])?$_POST['email']:''?>" required>
 
             <label for="signup_password" class="control-label">Password*</label>
-            <input name="password" type="password" class="form-control" id="signup_password" value="<?=isset($_POST['password'])?$_POST['password']:''?>" required>
+            <input name="password" type="password"  class="form-control" id="signup_password" value="<?=isset($_POST['password'])?$_POST['password']:''?>" required>
 
             <label for="signup_confirm_password" class="control-label">Confirm Password*</label>
             <input name="confirm_password" type="password" class="form-control" id="signup_confirm_password" value="<?=isset($_POST['password1'])?$_POST['password1']:''?>" required>

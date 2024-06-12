@@ -1,4 +1,6 @@
 <?php
+
+
     function validate($link,$email='',$password=''){
 
         $errors = array();

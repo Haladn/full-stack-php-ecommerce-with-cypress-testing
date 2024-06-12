@@ -52,7 +52,13 @@
     <!-- font awesome kit -->
     <script src="https://kit.fontawesome.com/06211be5ed.js" crossorigin="anonymous"></script>
 
+    <script
+    src="https://www.paypal.com/sdk/js?client-id=AWveJmPelFnkPTahPAR0ANIMDdCEPgm0dnTO_4FeEaskXp8IhF8pQs-AEimi5V7OJM72ntrOGLdz89aP&currency=GBP"> // Required. Replace YOUR_CLIENT_ID with your sandbox client ID.
+    </script>
+
     <link rel="stylesheet" href="<?=MAIN_DIRECTORY?>/css/style.css" >
+    
+</script>
     <title>MKTIME</title>
   </head>
 
@@ -83,7 +89,7 @@
 
                   
                       
-                  <form id="search_engin" class="m-0" action="<?=MAIN_DIRECTORY?>/home.php" method="post" >
+                  <form id="search_engin" class="navbar-nav" action="<?=MAIN_DIRECTORY?>/home.php" method="post" >
                     <div class="input-group">
                       <input  name="search" type="search" class="form-control" placeholder="Search mktime"  value="<?=isset($_POST['search'])?$_POST['search']:''?>">
                       <input class="btn btn-light text-dark" type="submit" name="search_btn" value="Search">
@@ -93,8 +99,8 @@
                     
 
                      
-                        <ul id="navbar-list" class="navbar-nav ms-auto">
-                          <li id="cart-list" class="nav-item my-auto">
+                        <ul id="navbar-list" class="navbar-nav ms-auto ">
+                          <li id="cart-list" class="nav-item my-auto ">
                             <a id="cart-anchor" href="<?= MAIN_DIRECTORY?>/user/cart.php" class="nav-link  <?=$current_page == 'cart.php'? 'active':'' ?>"><i id="cart-icon" class="fa-solid fa-lg fa-cart-shopping" style="color: #FFD43B;">
                               <?=$total_quantity?>
                             </i></a>
@@ -115,8 +121,23 @@
                             <?php
                             }
                             ?>
-                          </li>
-                          <li id="username" class="nav-item text-white">
+                            </li>
+
+                            
+                              <?php
+                                if(isset($_SESSION['username'])){
+
+                                  ?>
+                                  <li id="username" class="nav-item text-white">
+                                      <a class="nav-link" href="<?=MAIN_DIRECTORY?>/user/profile.php">profile</a>
+                                  </li>
+                                  <?php
+                                }
+                              ?>
+                            
+
+
+                            <li id="username" class="nav-item text-white">
                             <?php
                               if(isset($_SESSION['username'])){
                                 ?>

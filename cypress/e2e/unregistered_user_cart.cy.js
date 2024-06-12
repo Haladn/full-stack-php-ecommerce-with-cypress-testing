@@ -73,7 +73,7 @@ describe('checking cart items number with cart content', () => {
 
     // get and check checkout form
     cy.get('#unregistered-total-form').should('exist')
-    .and('have.attr','action','../tools/checkout.php')
+    .and('have.attr','action','../tools/handle_address.php')
     .and('have.attr','method','POST')
 
     // get input elements and check them
@@ -100,15 +100,15 @@ describe('checking cart items number with cart content', () => {
     // to check it has a value
     cy.get('[name="total_price"]').invoke('val')
     
-    // get and check checkout button
+    // get and check handle_address button
     cy.get('#unregistered-total-form').find('[name="total_checkout_btn"]').should('exist')
     
-    cy.get('[name="total_checkout_btn"]').should('have.text','Checkout')
+    cy.get('[name="total_checkout_btn"]').should('have.text','Proceed to Checkout')
     .and('have.attr','type','submit')
     .and('have.class','btn').click()
 
-    // check url that include checkout.php
-    cy.url().should('contain','checkout.php')
+    // check url that include login.php
+    cy.url().should('contain','login.php')
 
     // back to the cart page
     cy.visit('http://localhost/php_ecommerce/user/cart.php')

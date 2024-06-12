@@ -11,6 +11,11 @@
         $r = mysqli_query($connect,$q);
         if($r && mysqli_num_rows($r) > 0){
             $items = mysqli_fetch_all($r,MYSQLI_ASSOC);
+
+            // store totals in session to access it easily for later use
+            $_SESSION['total_price'] = $total_price;
+            $_SESSION['total_quantity'] = $total_quantity;
+
             // getting and display total price and total quantity that assigned values in nav.php.
             ?>
                 <div class="container-fluid text-center mt-5 ">
@@ -18,10 +23,10 @@
                         <div id="cart-total-quantity" class="h6">Total Products: <span><?=$total_quantity?></span></div>
                         <div id="cart-total-price" class="h6">Total Price: £<span><?=number_format($total_price,2)?></span></div>
 
-                        <form action="../tools/checkout.php" method="POST">
+                        <form action="../tools/add_address.php" method="POST">
                             <input id="cart-form-total-quantity" name="total_quantity" type="text" value="<?=$total_quantity?>" hidden>
                             <input id="cart-form-total-price" name="total_price" type="text" value="<?=$total_price?>" hidden>
-                            <button id="cart-form-totalbutton" type="submit" name="total_checkout_btn" class="btn btn-md btn-success mt-2">Checkout</button>
+                            <button id="cart-form-totalbutton" type="submit" name="total_checkout_btn" class="btn btn-md btn-success mt-2">Proceed to Checkout</button>
                         </form>
                     </div>
                 </div>
@@ -88,10 +93,10 @@
                         <div id="unregistered-total-product" class="h6">Total Products: <span><?=$total_quantity?></span></div>
                         <div id="unregistered-total-price" class="h6">Total Price: £<span><?=number_format($total_price,2)?></span></div>
 
-                        <form id="unregistered-total-form" action="../tools/checkout.php" method="POST">
+                        <form id="unregistered-total-form" action="../tools/handle_address.php" method="POST">
                             <input name="total_quantity" type="text" value="<?=$total_quantity?>" hidden>
                             <input name="total_price" type="text" value="<?=$total_price?>" hidden>
-                            <button type="submit" name="total_checkout_btn" class="btn btn-md btn-success mt-2">Checkout</button>
+                            <button type="submit" name="total_checkout_btn" class="btn btn-md btn-success mt-2">Proceed to Checkout</button>
                         </form>
                     </div>
                 </div>

@@ -7,15 +7,15 @@
     if(isset($_SESSION['message'])){
         ?>
             <div class="row justify-content-center mt-5">
-                <div class=" col-sm-6 col-10">
-                    <div id="success_message" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <div class=" col-sm-6 col-10 text-center">
+                    <div id="success_message" class="alert alert-warning alert-dismissible fade show fw-bold" role="alert">
                         <?='<p>'.$_SESSION['message'].'</p>'?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
             </div>
         <?php
-        session_unset();
+        unset($_SESSION['message']);
     }
 
     // handling the form data
@@ -27,7 +27,13 @@
                 $_SESSION['username'] = $data['username'];
                 $_SESSION['login_time'] = time();
                 
-                header("Location: ../home.php");
+                //redirect to home page
+                //header("Location: ../home.php")  // we can't use header beacause it gives error that we already
+                                                   // sent header in nav.php  then we used javascript location to redirect
+
+                echo'<script type="text/javascript">window.location.href="../home.php"</script>';
+                mysqli_close($connect);
+                exit;
             }
             // display errors message
             else{
